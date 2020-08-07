@@ -1,9 +1,10 @@
-package evan.wang.flink.examples.streaming
+package evan.wang.flink.examples.streamapi
 
 import java.text.SimpleDateFormat
 import java.util.Properties
 
 import com.alibaba.fastjson.JSONObject
+import evan.wang.flink.examples.common.JsonObjectDeserializationSchema
 import org.apache.flink.api.common.functions.ReduceFunction
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.TimeCharacteristic

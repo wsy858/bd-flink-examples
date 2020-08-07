@@ -1,4 +1,4 @@
-package evan.wang.flink.examples.streaming;
+package evan.wang.flink.examples.common;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.flink.api.common.serialization.DeserializationSchema;

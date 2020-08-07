@@ -1,18 +1,20 @@
 package evan.wang.flink.examples.wordcount
 
-import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.flink.api.scala._
+
 /**
-  *
+  * a Streaming Job
+  * nc -lk 9001  启动socket发送消息
   */
-object WindowWordCount {
+object StreamWordCountJob {
 
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     // set up the streaming execution environment
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-    val text = env.socketTextStream("10.201.5.224", 9001)
+    val text = env.socketTextStream("x.x.x.x", 9001)
 
     val wordCounts = text.flatMap(_.split("\\s"))
       .filter(_.nonEmpty)

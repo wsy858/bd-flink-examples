@@ -1,8 +1,10 @@
-package evan.wang.flink.examples.streamapi;
+package evan.wang.flink.examples.streams;
 
 
 import com.alibaba.fastjson.JSONObject;
+
 import evan.wang.flink.examples.common.JsonObjectDeserializationSchema;
+import evan.wang.flink.examples.utils.PropertiesUtil;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.typeinfo.BasicTypeInfo;
 import org.apache.flink.streaming.api.datastream.BroadcastStream;
@@ -40,8 +42,9 @@ public class BroadcastDynamicUpdateConf {
         BroadcastStream<Integer> broadcastStream = confStream.broadcast(confDescriptor);
 
         //构造一个业务数据流, 发送{"product": "p1", "num": 21}
+        //./bin/kafka-console-producer.sh --broker-list hostname:9092 --topic flink_broadcast_test1
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "x.x.x.x:9092"); //todo 更改kafka配置
+        properties.setProperty("bootstrap.servers", PropertiesUtil.getStrValue("kafka.bootstrap.servers"));
         properties.setProperty("group.id", "test1");
         FlinkKafkaConsumer<JSONObject> source = new FlinkKafkaConsumer<>("flink_broadcast_test1", new JsonObjectDeserializationSchema(), properties);
         SingleOutputStreamOperator<JSONObject> sourceStream = env.addSource(source).name("业务数据源").setParallelism(1);
@@ -51,7 +54,7 @@ public class BroadcastDynamicUpdateConf {
             public void processElement(JSONObject value, ReadOnlyContext ctx, Collector<String> out) throws Exception {
                 // 获取广播变量的值
                 Long v = ctx.getBroadcastState(confDescriptor).get("value");
-                //logger.info("$$$$$$$$$$$$$value = [" + value + "], v = [" + v + "]");
+                logger.info("process normal element: value = [" + value + "], v = [" + v + "]");
                 if (v != null && value.getLong("num") > v) {
                     String message = String.format("收到了一个大于阈值%s的结果%s", v, value.getLong("num"));
                     out.collect(message);
@@ -60,16 +63,16 @@ public class BroadcastDynamicUpdateConf {
 
             @Override
             public void processBroadcastElement(Integer value, Context ctx, Collector<String> out) throws Exception {
-                //logger.info("%%%%%%%%%%%%%value = [" + value + "]");
+                if (value == null) {
+                    return;
+                }
+                logger.info("process broadcast element: value = [" + value + "]");
                 //更新广播变量的值
                 ctx.getBroadcastState(confDescriptor).put("value", value.longValue());
             }
         });
-
         outStream.print().setParallelism(1);
-
         env.execute("BroadcastDynamicUpdate");
-
     }
 
 
@@ -82,7 +85,7 @@ public class BroadcastDynamicUpdateConf {
             while (isRunning) {
                 //模拟配置数据
                 int configValue = randInt(15, 20);
-                //实际可查询数据库获取配置数据......
+                //实际可查询Mysql数据库获取配置数据......
                 ctx.collect(configValue);
                 Thread.sleep(10 * 1000);
             }

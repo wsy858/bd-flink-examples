@@ -22,7 +22,7 @@ object BatchWordCount {
       .setParallelism(1)
       .sortPartition(1, Order.DESCENDING)
    // wordCounts.print()
-    wordCounts.writeAsCsv("E:\\code\\study\\FinkDemo1\\target\\csv\\t.csv", "\n", ",", WriteMode.OVERWRITE)
+    wordCounts.writeAsCsv("E:\\code\\study\\t.csv", "\n", ",", WriteMode.OVERWRITE)
 
     /**
       * 如果输出只有print，则不需要execute，如果有其它新的sink，则需要last call（execute...）

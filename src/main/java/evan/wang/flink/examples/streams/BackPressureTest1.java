@@ -1,4 +1,4 @@
-package evan.wang.flink.examples.streamapi;
+package evan.wang.flink.examples.streams;
 
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;

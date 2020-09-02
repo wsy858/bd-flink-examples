@@ -1,4 +1,4 @@
-package evan.wang.flink.examples.streamapi
+package evan.wang.flink.examples.practical
 
 import java.text.SimpleDateFormat
 import java.util.Properties
@@ -6,14 +6,13 @@ import java.util.Properties
 import com.alibaba.fastjson.JSONObject
 import evan.wang.flink.examples.common.JsonObjectDeserializationSchema
 import org.apache.flink.api.common.functions.ReduceFunction
-import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
-
+import org.apache.flink.api.scala._
 /**
   * 实时统计PV、UV
   */

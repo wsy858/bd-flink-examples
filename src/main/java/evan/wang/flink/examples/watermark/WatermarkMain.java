@@ -1,5 +1,6 @@
 package evan.wang.flink.examples.watermark;
 
+import evan.wang.flink.examples.utils.PropertiesUtil;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.streaming.api.TimeCharacteristic;
@@ -18,7 +19,7 @@ public class WatermarkMain {
         //并行度设置为 1
         env.setParallelism(1);
 
-        SingleOutputStreamOperator<Word> data = env.socketTextStream("10.201.5.47", 9001)
+        SingleOutputStreamOperator<Word> data = env.socketTextStream(PropertiesUtil.getStrValue("socket.host"), PropertiesUtil.getIntValue("socket.port", 9091))
                 .map((MapFunction<String, Word>) value -> {
                     String[] split = value.trim().split(",");
                     return new Word(split[0], Integer.valueOf(split[1]), Long.valueOf(split[2]));

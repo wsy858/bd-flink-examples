@@ -13,6 +13,7 @@ import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, FlinkKafkaProducer}
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
 import org.apache.flink.api.scala._
+import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrdernessTimestampExtractor
 /**
   * 实时统计PV、UV
   */
@@ -49,8 +50,18 @@ object PvUvStatisticExmaple {
     sink2.setWriteTimestampToKafka(true)
 
     val ds = stream.map(node => Event(node.getString("ip"), node.getString("createTime")))
-      .assignAscendingTimestamps(event => sdf.parse(event.createTime).getTime) //指定时间字段创建watermark,67
-      .windowAll(TumblingEventTimeWindows.of(Time.seconds(10))) //数据集是KeyedStream类型则调用window方法，None-Keyed类型则调用windowsAll方法
+      //.assignAscendingTimestamps(event => sdf.parse(event.createTime).getTime) //指定时间字段创建watermark,67
+      .assignTimestampsAndWatermarks( new BoundedOutOfOrdernessTimestampExtractor[Event](Time.seconds(5)) {
+      /**
+        * Extracts the timestamp from the given element.
+        *
+        * @param element The element that the timestamp is extracted from.
+        * @return The new timestamp.
+        */
+      override def extractTimestamp(element: Event): Long = {
+        sdf.parse(element.createTime).getTime
+      }
+    }).windowAll(TumblingEventTimeWindows.of(Time.seconds(10))) //数据集是KeyedStream类型则调用window方法，None-Keyed类型则调用windowsAll方法
       .reduce(new ReduceFunction[Event] {
       override def reduce(value1: Event, value2: Event): Event = {
         Event(value1.ip, null, value1.count + value2.count)

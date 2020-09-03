@@ -11,6 +11,7 @@ import static evan.wang.flink.examples.utils.DateUtil.YYYY_MM_DD_HH_MM_SS;
 
 
 /**
+ * 周期性的生成watermark
  */
 @Slf4j
 public class WordPeriodicWatermark implements AssignerWithPeriodicWatermarks<Word> {

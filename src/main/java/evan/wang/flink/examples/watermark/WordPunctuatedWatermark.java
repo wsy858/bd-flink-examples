@@ -6,10 +6,7 @@ import org.apache.flink.streaming.api.watermark.Watermark;
 import javax.annotation.Nullable;
 
 /**
- * Desc: Punctuated Watermark
- * Created by zhisheng on 2019-07-09
- * blog：http://www.54tianzhisheng.cn/
- * 微信公众号：zhisheng
+ * 根据特定条件，间断性的生成watermark
  */
 public class WordPunctuatedWatermark implements AssignerWithPunctuatedWatermarks<Word> {
 
@@ -18,7 +15,6 @@ public class WordPunctuatedWatermark implements AssignerWithPunctuatedWatermarks
     public Watermark checkAndGetNextWatermark(Word lastElement, long extractedTimestamp) {
         System.out.println(extractedTimestamp % 3 == 0 ? new Watermark(extractedTimestamp) : null);
         return extractedTimestamp % 3 == 0 ? new Watermark(extractedTimestamp) : null;
-//        return new Watermark(extractedTimestamp);
     }
 
     @Override

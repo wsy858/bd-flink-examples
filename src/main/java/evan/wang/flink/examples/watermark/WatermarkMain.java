@@ -22,7 +22,7 @@ public class WatermarkMain {
                 .map((MapFunction<String, Word>) value -> {
                     String[] split = value.trim().split(",");
                     return new Word(split[0], Integer.valueOf(split[1]), Long.valueOf(split[2]));
-                }).assignTimestampsAndWatermarks(new WordPunctuatedWatermark());
+                }).assignTimestampsAndWatermarks(new WordPeriodicWatermark());
 
         data.keyBy("word")
                 .timeWindow(Time.seconds(10))

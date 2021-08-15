@@ -1,17 +1,17 @@
 package evan.wang.flink.examples.common;
 
+import static org.apache.flink.api.java.typeutils.TypeExtractor.getForClass;
+
 import com.alibaba.fastjson.JSONObject;
+import java.nio.charset.Charset;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
-
-import static org.apache.flink.api.java.typeutils.TypeExtractor.getForClass;
-
 public class JsonObjectDeserializationSchema implements DeserializationSchema<JSONObject> {
-    private static final Logger logger = LoggerFactory.getLogger(JsonObjectDeserializationSchema.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(JsonObjectDeserializationSchema.class);
 
     @Override
     public JSONObject deserialize(byte[] message) {
@@ -33,5 +33,4 @@ public class JsonObjectDeserializationSchema implements DeserializationSchema<JS
     public TypeInformation<JSONObject> getProducedType() {
         return getForClass(JSONObject.class);
     }
-
 }

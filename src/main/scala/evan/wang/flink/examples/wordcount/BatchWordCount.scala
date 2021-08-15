@@ -12,8 +12,9 @@ object BatchWordCount {
   def main(args: Array[String]): Unit = {
     // set up the batch execution environment
     val env = ExecutionEnvironment.getExecutionEnvironment
+    val path = "D:\\develop\\code\\scala_workspace\\bd-flink-examples"
 
-    val wordCounts = env.readTextFile("E:\\code\\study\\FinkDemo1\\pom.xml")
+    val wordCounts = env.readTextFile(s"$path\\pom.xml")
       .flatMap(_.toLowerCase.split("\\s"))
       .filter(_.nonEmpty)
       .map((_, 1))
@@ -21,8 +22,8 @@ object BatchWordCount {
       .sum(1)
       .setParallelism(1)
       .sortPartition(1, Order.DESCENDING)
-   // wordCounts.print()
-    wordCounts.writeAsCsv("E:\\code\\study\\t.csv", "\n", ",", WriteMode.OVERWRITE)
+    wordCounts.print()
+    wordCounts.writeAsCsv(s"$path\\t.csv", "\n", ",", WriteMode.OVERWRITE)
 
     /**
       * 如果输出只有print，则不需要execute，如果有其它新的sink，则需要last call（execute...）

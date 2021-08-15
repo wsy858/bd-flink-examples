@@ -49,7 +49,8 @@ public class BroadcastDynamicUpdateConf {
         FlinkKafkaConsumer<JSONObject> source = new FlinkKafkaConsumer<>("flink_broadcast_test1", new JsonObjectDeserializationSchema(), properties);
         SingleOutputStreamOperator<JSONObject> sourceStream = env.addSource(source).name("业务数据源").setParallelism(1);
 
-        SingleOutputStreamOperator<String> outStream = sourceStream.connect(broadcastStream).process(new BroadcastProcessFunction<JSONObject, Integer, String>() {
+        SingleOutputStreamOperator<String> outStream = sourceStream.connect(broadcastStream)
+                .process(new BroadcastProcessFunction<JSONObject, Integer, String>() {
             @Override
             public void processElement(JSONObject value, ReadOnlyContext ctx, Collector<String> out) throws Exception {
                 // 获取广播变量的值

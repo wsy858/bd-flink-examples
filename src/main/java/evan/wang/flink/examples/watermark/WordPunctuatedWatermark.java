@@ -3,17 +3,15 @@ package evan.wang.flink.examples.watermark;
 import org.apache.flink.streaming.api.functions.AssignerWithPunctuatedWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;
 
-import javax.annotation.Nullable;
 
 /**
- * 根据特定条件，间断性的生成watermark
+ * 根据特定条件，标记生成watermark
  */
+@Deprecated
 public class WordPunctuatedWatermark implements AssignerWithPunctuatedWatermarks<Word> {
 
-    @Nullable
     @Override
     public Watermark checkAndGetNextWatermark(Word lastElement, long extractedTimestamp) {
-        System.out.println(extractedTimestamp % 3 == 0 ? new Watermark(extractedTimestamp) : null);
         return extractedTimestamp % 3 == 0 ? new Watermark(extractedTimestamp) : null;
     }
 

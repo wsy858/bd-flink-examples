@@ -6,3 +6,4 @@ target/
 .project
 *.eclipse.*
 *.iml
+dependency-reduced-pom.xml

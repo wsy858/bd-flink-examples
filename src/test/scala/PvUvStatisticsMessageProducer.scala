@@ -8,7 +8,7 @@ object PvUvStatisticsMessageProducer {
 
   def main(args: Array[String]): Unit = {
     val props = new Properties()
-    props.put("bootstrap.servers", "10.201.5.57:9092")
+    props.put("bootstrap.servers", args(1) + ":" + args(1)) // ip:port
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
     val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

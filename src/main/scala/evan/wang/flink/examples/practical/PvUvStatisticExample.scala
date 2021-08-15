@@ -6,7 +6,6 @@ import java.util.Properties
 import com.alibaba.fastjson.JSONObject
 import evan.wang.flink.examples.common.JsonObjectDeserializationSchema
 import org.apache.flink.api.common.functions.ReduceFunction
-import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
@@ -17,7 +16,7 @@ import org.apache.flink.streaming.api.functions.timestamps.BoundedOutOfOrderness
 /**
   * 实时统计PV、UV
   */
-object PvUvStatisticExmaple {
+object PvUvStatisticExample {
   val topicPrefix = "topic_flink_example_"
 
   case class Event(ip: String, createTime: String, count: Int = 1)
@@ -35,7 +34,6 @@ object PvUvStatisticExmaple {
   def main(args: Array[String]): Unit = {
     val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     val env = StreamExecutionEnvironment.getExecutionEnvironment
-    env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     env.setParallelism(1)
     env.enableCheckpointing(5000)
 
